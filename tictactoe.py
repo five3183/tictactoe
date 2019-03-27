@@ -7,7 +7,8 @@ def display_board(board):
 	print('     ----------')
 	print(f'      {board[4]} | {board[5]} | {board[6]}') 
 	print('     ----------')
-	print(f'      {board[7]} | {board[8]} | {board[9]}') 
+	print(f'      {board[7]} | {board[8]} | {board[9]}')
+	print('\n' * 5)
  
 #Assign player markers
 def player_input():
@@ -15,11 +16,14 @@ def player_input():
 
 	while not (marker == 'X' or marker == 'O'):
 		marker = input('Player 1: Do you want to be X or O ').upper()
-
-		if marker == 'X':
-			return('X', 'O')
+		if marker == 'X' or marker == 'O':
+			if marker == 'X':
+				return('X', 'O')
+			else:
+				return('O', 'X')
 		else:
-			return('O', 'X')
+			print('Please choose X or O')
+			return player_input()
 
 def place_marker(board, marker, position):
 	board[position] = marker
@@ -48,31 +52,33 @@ def space_check(board, position):
 	return board[position] == ' '
 
 def check_full_board(board):
-	for space in board:
-		if space == ' ':
+	for x in range(1,10):
+		if space_check(board, x):
 			return False
-		else:
-			return True
+	return True
 
 def player_choice(board):
 	position = int(input('Choose a position: (1 - 9) '))
-	if space_check(board, position):
-		return position
+	if position >= 1 and position <= 9:
+		if space_check(board, position):
+			return position
+		else:
+			print('Space is taken! Try again!')
+			return player_choice(game_board)
 	else:
-		print('Space is taken! Try again!')
 		return player_choice(game_board)
-	'''
-	position = 0
-
-	while position not in [1,2,3,4,5,6,7,8,9] or not space_check(board, position):
-		position = int(input('Choose a position: (1 - 9) '))
-		return position
-	'''
 
 def replay():
 	choice = input('Play again?  Enter Yes or No ').upper()
-
-	return choice == 'YES'
+	if choice == 'YES':
+		return True
+	if choice == 'NO':
+		print('Thank you for playing Tic Tac Toe')
+		return False
+	else:
+		print('Nice reading comprehension skills')
+		print('Good Bye!')
+		return False
 
 # Keep running game
 print('Welcome to Tic Tac Toe')
@@ -87,7 +93,7 @@ while True:
 
 	print(f'{turn} will go first')
 
-	play_game = input('Ready to play? Yes or No').upper()
+	play_game = input('Ready to play? Yes or No ').upper()
 
 	if play_game == 'YES':
 		game_rdy = True
@@ -132,4 +138,3 @@ while True:
 
 	if not replay():
 		break
-# Break loop in replay function
